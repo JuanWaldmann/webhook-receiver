@@ -1,0 +1,1 @@
+Express webhook receiver with HMAC-SHA256 signature verification (GitHub-style) to authenticate incoming webhook payloads before processing.
