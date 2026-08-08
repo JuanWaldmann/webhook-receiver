@@ -1,1 +1,1 @@
-Express webhook receiver with HMAC-SHA256 signature verification (GitHub-style) to authenticate incoming webhook payloads before processing.
+Express webhook receiver with HMAC-SHA256 signature verification (GitHub-style) to authenticate incoming webhook payloads before processing, now persists events idempotently to Postgres db

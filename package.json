@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "webhook-receiver",
   "version": "1.0.0",
   "description": "",
@@ -9,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
