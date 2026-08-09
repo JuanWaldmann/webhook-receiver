@@ -13,6 +13,17 @@ const INSERT_WEBHOOK_QUERY = `
  * 
  * returns true if a new row was inserted, false if it was a duplicate
  */
+const SELECT_PENDING_ROWS = `
+    SELECT * FROM webhooks
+    WHERE status = 'pending'
+`
+//TODO Export interface into its own file
+interface WebhookRow {
+    id: number;
+    event_id: string;
+    status: string;
+    attempts: number;
+}
 
 export async function insertWebhookIfNew(
     deliveryId: string,
@@ -36,3 +47,13 @@ export async function insertWebhookIfNew(
     }
 }
 
+export async function getPendingWebhooks(): Promise<Array<WebhookRow>> {
+    try{
+    const result = await pool.query(SELECT_PENDING_ROWS)
+    return result.rows
+}
+catch(err) {
+        console.error(err);
+        throw err;
+    }
+}
