@@ -1,3 +1,4 @@
+import '../loadEnv.ts';
 import { getPendingWebhooks, updateWebhookAttempt } from "../db/webhooks.ts";
 
 const MAX_ATTEMPTS = 5;

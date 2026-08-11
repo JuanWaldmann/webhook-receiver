@@ -1,3 +1,4 @@
+    import './loadEnv.ts'
     import express, { type Express, type Request, type Response, type NextFunction } from 'express';
     import { isValid } from './middleware/verifySignature.ts';
     import { insertWebhookIfNew } from './db/webhooks.ts';
