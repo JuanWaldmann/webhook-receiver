@@ -19,7 +19,12 @@ const INSERT_WEBHOOK_QUERY = `
 
 const SELECT_PENDING_ROWS = `
   SELECT * FROM webhooks
-  WHERE status = 'pending'
+  WHERE status = 'pending' 
+    AND (last_attempt_at IS NULL
+    OR last_attempt_at <= NOW() - (
+    $1 * POWER(2, attempts)
+    ) * INTERVAL '1 millisecond'
+  )
 `;
 
 const UPDATE_WEBHOOK_ATTEMPT = `
@@ -58,11 +63,16 @@ export async function insertWebhookIfNew(
 
 /**
  * Fetches all webhook events currently awaiting processing.
+ * added exponential backoff for retries. Extends delays in sql query when api returns 500
  */
+
 export async function getPendingWebhooks(): Promise<Array<WebhookRow>> {
   try {
-    const result = await pool.query(SELECT_PENDING_ROWS);
+    const baseDelay = 2000
+    const result = await pool.query(SELECT_PENDING_ROWS, [baseDelay]);
+
     return result.rows;
+
   } catch (err) {
     console.error('Failed to fetch pending webhooks', err);
     throw err;
