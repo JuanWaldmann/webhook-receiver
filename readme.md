@@ -117,8 +117,8 @@ CREATE TABLE webhooks (
 **Requirements:** Node 22+, a PostgreSQL database (e.g. a free [Neon](https://neon.tech) instance)
 
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/juanwaldmann/webhook-receiver.git
+cd webhook-receiver
 npm install
 ```
 
