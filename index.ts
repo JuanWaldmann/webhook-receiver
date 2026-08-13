@@ -2,6 +2,8 @@
     import express, { type Express, type Request, type Response, type NextFunction } from 'express';
     import { isValid } from './middleware/verifySignature.ts';
     import { insertWebhookIfNew } from './db/webhooks.ts';
+    import { registerShutdown } from './utils/shutdown.ts';
+    import { closePool } from './db/pool.ts';
 
     const app: Express = express();
     const port = 3000;
@@ -23,7 +25,12 @@
         res.sendStatus(200);
     });
 
-    app.listen (port, ()=> {
+    const server = app.listen (port, ()=> {
     console.log(`Example app listening on port ${port}`);
     });
 
+
+    registerShutdown(async () => {
+    server.close();
+    await closePool();
+});
