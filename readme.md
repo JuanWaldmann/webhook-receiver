@@ -17,8 +17,7 @@ that come with distributed, asynchronous delivery.
    not reprocessed
 4. **Acknowledges** the sender immediately (sub-second), deferring any real work to
    a background process
-5. **Processes** pending events asynchronously via a polling worker, which retries
-   failures and gives up gracefully after a configurable number of attempts
+5. **Processes** pending events asynchronously via a polling worker, which retries failures using exponential backoff and gives up gracefully after a configurable number of attempts
 
 ## Architecture
 
@@ -143,20 +142,13 @@ Send a test webhook with a valid HMAC-SHA256 signature to `POST /webhooks/incomi
 
 ## What I'd add next
 
-- **Exponential backoff** — retries currently happen on a fixed interval; scaling
-  the delay by attempt count (using the existing `last_attempt_at` column) would
-  better reflect real-world retry strategy
-- **Graceful shutdown handling** for the worker and connection pool
 - **Structured logging** (e.g. via `pino`) in place of `console.log`, feeding into
   a dashboard (Grafana) for observability
 
 ## What I learned building this
 
-This project was built without AI-generated code — every function was written,
-debugged, and understood line by line, with AI used strictly as a
-Socratic reviewer and documentation pointer rather than a code generator. The
-hardest parts were the ones that mattered most: understanding *why* raw request
-bytes matter for HMAC verification, why parameterized queries prevent SQL
-injection, and why acknowledging a webhook before processing it is a deliberate
-architectural choice — not just implementation details, but the reasoning a
-Solutions Engineer needs to explain, debug, and defend in production.
+The hardest parts were the ones that mattered most: understanding *why* raw request bytes matter for HMAC verification, why parameterized queries prevent SQL injection, and why acknowledging a webhook before processing it is a deliberate architectural choice — not just implementation details, but the reasoning a Solutions Engineer needs to explain, debug, and defend in production.
+
+I also learned how **exponential backoff** and **graceful shutdown** fit into a reliable asynchronous system, from scheduling retries based on previous attempts to properly cleaning up resources when the application terminates.
+
+This project was built without AI-generated code — every function was written, debugged, and understood line by line, with AI used strictly as a Socratic reviewer and documentation pointer rather than a code generator.
