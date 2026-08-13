@@ -34,6 +34,7 @@ const pollInterval = setInterval(
   POLL_INTERVAL_MS
 );
 
+// Stop polling and release database connections on shutdown.
 registerShutdown(async () => {
   clearInterval(pollInterval);
   await closePool();
